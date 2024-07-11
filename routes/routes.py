@@ -4,6 +4,7 @@ from configuration.extensions import mongo, bcrypt, jwt
 from models.models import User
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from models.forms.management import RegistrationForm, LoginForm
+from werkzeug.datastructures import MultiDict
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -52,7 +53,7 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    form = LoginForm(request.form)
+    form = LoginForm(MultiDict(request.get_json()))
 
     if form.validate():
         email = form.email.data
@@ -72,6 +73,10 @@ def login():
             return response, 200
 
         return jsonify({'msg': 'Invalid email or password. Please check your detials.'}), 401
+    else:
+        errors = form.errors
+        print(errors)
+        return jsonify({"msg": "Please provide appropriate data.", "error": errors}), 400
 
 @auth_bp.route('/protected', methods=['GET'])
 @jwt_required()
