@@ -1,12 +1,13 @@
 import datetime
 from flask import Blueprint, request, jsonify
-from configuration.extensions import mongo, bcrypt, jwt
+from configuration.extensions import bcrypt, jwt, get_mongo_client
 from models.models import User
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from models.forms.management import RegistrationForm, LoginForm
 from werkzeug.datastructures import MultiDict
 
 auth_bp = Blueprint('auth_bp', __name__)
+mongo = get_mongo_client()
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -58,6 +59,8 @@ def login():
     if form.validate():
         email = form.email.data
         password = form.password.data
+        print(mongo)
+        print(mongo.db)
 
         user = User.find_by_email(email)
         if user and bcrypt.check_password_hash(user['password'], password):

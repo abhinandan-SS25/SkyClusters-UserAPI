@@ -1,4 +1,7 @@
-from configuration.extensions import mongo
+from configuration.extensions import get_mongo_client
+
+client = get_mongo_client()
+mongo = client.get_database('User')
 
 class User:
     @staticmethod

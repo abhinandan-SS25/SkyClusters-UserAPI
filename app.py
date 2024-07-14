@@ -1,8 +1,6 @@
-from datetime import timedelta
-import random, string
 from flask import Flask, jsonify
+from configuration.extensions import bcrypt, jwt, get_mongo_client
 from configuration.config import Configuration
-from configuration.extensions import mongo, bcrypt, jwt
 from routes.routes import auth_bp
 from flask_cors import CORS
 from flask_wtf import CSRFProtect
@@ -22,18 +20,7 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://local
         metadata.seek(0)
         json.dump(appMeta, metadata)
         metadata.truncate()'''
-        
-characters = string.ascii_letters + string.digits + string.punctuation
-random_string1 = ''.join(random.choice(characters) for _ in range(25))
-random_string2 = ''.join(random.choice(characters) for _ in range(25))
-
-app.config["JWT_COOKIE_SECURE"] = False
-app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-app.config["JWT_SECRET_KEY"] = random_string1
-app.config["SECRET_KEY"] = random_string2  
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=72)
-
-mongo.init_app(app)
+    
 bcrypt.init_app(app)
 jwt.init_app(app)
 
