@@ -9,7 +9,7 @@ from flask_wtf.csrf import generate_csrf
 app = Flask(__name__)
 app.config.from_object(Configuration)
 csrf = CSRFProtect(app)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000, https://abhinandan-ss25.github.io/SkyClusters-login"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000, https://abhinandan-ss25.github.io"}})
 
 '''with open("/SkyClusters-UserAPI/configuration/appMeta.json", "a+") as metadata:
     appMeta = json.load(metadata)
@@ -33,7 +33,7 @@ def get_csrf_token():
     if request.method == 'OPTIONS':
         # Handle preflight request
         headers = {
-            'Access-Control-Allow-Origin': 'https://abhinandan-ss25.github.io/SkyClusters-login',
+            'Access-Control-Allow-Origin': 'https://abhinandan-ss25.github.io',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Authorization, Content-Type'
         }
