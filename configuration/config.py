@@ -15,3 +15,4 @@ class Configuration:
     SECRET_KEY = random_string2  
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=72)
     SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
