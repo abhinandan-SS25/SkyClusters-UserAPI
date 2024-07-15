@@ -42,6 +42,7 @@ def get_csrf_token():
     response = jsonify({'csrf_token': generate_csrf()})
     response.set_cookie('csrf_token', generate_csrf(), samesite='None', secure=True)
     response.headers.add('Access-Control-Allow-Origin', 'https://abhinandan-ss25.github.io')
+    response.headers.add('Access-Control-Allow-Credentials', True)
     return response
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
