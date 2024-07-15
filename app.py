@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from configuration.extensions import bcrypt, jwt, get_mongo_client
 from configuration.config import Configuration
 from routes.routes import auth_bp
@@ -28,8 +28,17 @@ jwt.init_app(app)
 def index():
     return jsonify({"msg": "SkyClusters User API"})
 
-@auth_bp.route('/get_csrf_token', methods=['GET'])
+@auth_bp.route('/get_csrf_token', methods=['GET', 'OPTIONS'])
 def get_csrf_token():
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        headers = {
+            'Access-Control-Allow-Origin': 'https://abhinandan-ss25.github.io/SkyClusters-login',
+            'Access-Control-Allow-Methods': 'GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Authorization, Content-Type'
+        }
+        return ('', 204, headers)
+    
     response = jsonify({'csrf_token': generate_csrf()})
     response.set_cookie('csrf_token', generate_csrf(), samesite='None', secure=True)
     return response
