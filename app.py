@@ -30,8 +30,9 @@ def index():
 
 @auth_bp.route('/get_csrf_token', methods=['GET'])
 def get_csrf_token():
-    token = generate_csrf()
-    return jsonify({'csrf_token': token})
+    response = jsonify({'csrf_token': generate_csrf()})
+    response.set_cookie('csrf_token', generate_csrf(), samesite='None', secure=True)
+    return response
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 
