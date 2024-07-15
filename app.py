@@ -9,7 +9,7 @@ from flask_wtf.csrf import generate_csrf
 app = Flask(__name__)
 app.config.from_object(Configuration)
 csrf = CSRFProtect(app)
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000, https://abhinandan-ss25.github.io"}})
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["http://localhost:3000", "https://abhinandan-ss25.github.io"]}})
 
 '''with open("/SkyClusters-UserAPI/configuration/appMeta.json", "a+") as metadata:
     appMeta = json.load(metadata)
@@ -30,19 +30,9 @@ def index():
 
 @auth_bp.route('/get_csrf_token', methods=['GET', 'OPTIONS'])
 def get_csrf_token():
-    if request.method == 'OPTIONS':
-        # Handle preflight request
-        headers = {
-            'Access-Control-Allow-Origin': 'https://abhinandan-ss25.github.io',
-            'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Authorization, Content-Type'
-        }
-        return ('', 204, headers)
     
     response = jsonify({'csrf_token': generate_csrf()})
     response.set_cookie('csrf_token', generate_csrf(), samesite='None', secure=True)
-    response.headers.add('Access-Control-Allow-Origin', 'https://abhinandan-ss25.github.io')
-    response.headers.add('Access-Control-Allow-Credentials', "true")
     return response
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
